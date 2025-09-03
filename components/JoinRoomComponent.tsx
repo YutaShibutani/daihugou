@@ -35,11 +35,13 @@ const JoinRoomComponent: React.FC<JoinRoomComponentProps> = ({ onJoinRoom, onBac
                     type="text"
                     id="roomCode"
                     value={roomCode}
-                    onChange={(e) => setRoomCode(e.target.value)}
+                    onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
                     onKeyDown={(e) => e.key === 'Enter' && handleJoin()}
                     className="w-full px-4 py-2 mb-4 text-black uppercase rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     placeholder="XYZ123"
                     maxLength={6}
+                    autoCapitalize="characters"
+                    autoCorrect="off"
                 />
                 
                 {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
