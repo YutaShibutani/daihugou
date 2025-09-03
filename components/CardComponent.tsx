@@ -25,10 +25,11 @@ const CardComponent: React.FC<CardComponentProps> = ({ card, isSelected, onCardC
       <div className={`absolute top-1 left-2 text-2xl font-bold ${colorClass}`}>
         <span>{RANK_DISPLAY[card.rank]}</span>
       </div>
-      <div className={`absolute top-2.5 right-2 text-xl ${colorClass}`}>
+      
+       <div className={`absolute inset-0 flex items-center justify-center text-5xl ${colorClass} opacity-60`}>
          <span>{SUIT_SYMBOLS[card.suit]}</span>
       </div>
-       <div className={`absolute inset-0 flex items-center justify-center text-5xl ${colorClass} opacity-60`}>
+      <div className={`absolute bottom-2.5 left-2 text-xl ${colorClass}`}>
          <span>{SUIT_SYMBOLS[card.suit]}</span>
       </div>
       <div className={`absolute bottom-1 right-2 text-2xl font-bold transform rotate-180 ${colorClass}`}>

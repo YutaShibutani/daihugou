@@ -70,6 +70,14 @@ export const canPlay = (playedCards: Card[], fieldCards: Card[]): boolean => {
   const fieldPowerCard = fieldNonJokerCards.length > 0 ? fieldNonJokerCards[0] : fieldCards[0]; // If only jokers, use joker power
   const fieldPower = getCardPower(fieldPowerCard);
 
+  // 4-Shield: Cannot play a 2 or Joker on a 4
+  if (fieldPowerCard && fieldPowerCard.rank === 4) {
+    const hasPowerfulCard = playedCards.some(c => c.rank === 2 || c.suit === Suit.JOKER);
+    if (hasPowerfulCard) {
+      return false;
+    }
+  }
+
   return playedPower > fieldPower;
 };
 
@@ -81,8 +89,34 @@ export const isEightFlush = (playedCards: Card[]): boolean => {
   return playedCards.every(card => card.rank === 8 || card.suit === Suit.JOKER);
 };
 
+export const isSevenGive = (playedCards: Card[]): boolean => {
+  if (playedCards.length === 0) return false;
+  return playedCards.every(card => card.rank === 7 || card.suit === Suit.JOKER);
+};
+
+export const isTenDiscard = (playedCards: Card[]): boolean => {
+  if (playedCards.length === 0) return false;
+  return playedCards.every(card => card.rank === 10 || card.suit === Suit.JOKER);
+};
+
+export const isCounterablePlay = (playedCards: Card[]): boolean => {
+    if (playedCards.length === 0 || playedCards.length > 2) {
+        return false;
+    }
+    const mainCard = playedCards.find(c => c.suit !== Suit.JOKER);
+    if (!mainCard) return false; // Pure joker plays aren't counterable this way
+
+    const counterableRanks: Rank[] = [7, 8, 10];
+    return counterableRanks.includes(mainCard.rank);
+};
+
+export const canPerformFourStop = (hand: Card[]): boolean => {
+    return hand.filter(card => card.rank === 4).length >= 2;
+};
+
+
 // Helper to generate card combinations from a player's hand
-const getCombinations = <T>(array: T[], size: number): T[][] => {
+const getCombinations = <T,>(array: T[], size: number): T[][] => {
     const result: T[][] = [];
     function combinationUtil(startIndex: number, tempCombination: T[]) {
         if (tempCombination.length === size) {

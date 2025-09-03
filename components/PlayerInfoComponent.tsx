@@ -1,21 +1,38 @@
-
 import React from 'react';
 
 interface PlayerInfoComponentProps {
+  id: number;
   name: string;
   remainingCards: number;
   isCurrentTurn: boolean;
   isFinished: boolean;
   rankTitle: string;
   isCpu: boolean;
+  onPlayerClick?: (id: number) => void;
+  isTargetable?: boolean;
+  isSelectedTarget?: boolean;
 }
 
-const PlayerInfoComponent: React.FC<PlayerInfoComponentProps> = ({ name, remainingCards, isCurrentTurn, isFinished, rankTitle, isCpu }) => {
+const PlayerInfoComponent: React.FC<PlayerInfoComponentProps> = ({ 
+  id, name, remainingCards, isCurrentTurn, isFinished, rankTitle, isCpu, 
+  onPlayerClick, isTargetable, isSelectedTarget 
+}) => {
   const turnIndicatorClass = isCurrentTurn ? 'ring-4 ring-yellow-400 shadow-lg' : 'ring-2 ring-gray-600';
   const finishedClass = isFinished ? 'opacity-40' : '';
+  const targetableClass = isTargetable ? 'cursor-pointer hover:ring-blue-400' : '';
+  const selectedTargetClass = isSelectedTarget ? 'ring-4 ring-blue-500 shadow-xl scale-105' : '';
+
+  const handleClick = () => {
+    if (onPlayerClick && isTargetable) {
+      onPlayerClick(id);
+    }
+  };
 
   return (
-    <div className={`flex flex-col items-center p-3 bg-gray-800 rounded-lg w-48 transition-all duration-300 ${turnIndicatorClass} ${finishedClass}`}>
+    <div
+      onClick={handleClick}
+      className={`flex flex-col items-center p-3 bg-gray-800 rounded-lg w-48 transition-all duration-300 ${turnIndicatorClass} ${finishedClass} ${targetableClass} ${selectedTargetClass}`}
+    >
       <div className="text-lg font-bold">{name} {isCpu && <span className="text-xs text-gray-400">(CPU)</span>}</div>
       {isFinished ? (
         <div className="text-2xl font-bold text-green-400">FINISH</div>
