@@ -1,11 +1,11 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
-import { Card, Player } from '../types';
+import { Card, Player, WaitingPlayer } from '../types';
 import { createDeck, dealCards, canPlay, isEightFlush, cpuSimpleThink } from '../logic/gameLogic';
 import HandComponent from './HandComponent';
 import PlayerInfoComponent from './PlayerInfoComponent';
 import ControlsComponent from './ControlsComponent';
 import FieldComponent from './FieldComponent';
-import { WaitingPlayer } from './WaitingRoomComponent';
 
 interface GameTableComponentProps {
     playersInfo: WaitingPlayer[];

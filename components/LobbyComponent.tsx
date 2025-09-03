@@ -2,15 +2,22 @@
 import React, { useState } from 'react';
 
 interface LobbyComponentProps {
-  onEnterRoom: (playerName: string) => void;
+  onCreateRoom: (playerName: string) => void;
+  onGoToJoin: (playerName: string) => void;
 }
 
-const LobbyComponent: React.FC<LobbyComponentProps> = ({ onEnterRoom }) => {
+const LobbyComponent: React.FC<LobbyComponentProps> = ({ onCreateRoom, onGoToJoin }) => {
   const [playerName, setPlayerName] = useState('');
 
-  const handleEnter = () => {
+  const handleCreate = () => {
     if (playerName.trim()) {
-      onEnterRoom(playerName.trim());
+      onCreateRoom(playerName.trim());
+    }
+  };
+
+  const handleJoin = () => {
+    if (playerName.trim()) {
+      onGoToJoin(playerName.trim());
     }
   };
 
@@ -26,20 +33,19 @@ const LobbyComponent: React.FC<LobbyComponentProps> = ({ onEnterRoom }) => {
           id="playerName"
           value={playerName}
           onChange={(e) => setPlayerName(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleEnter()}
           className="w-full px-4 py-2 mb-6 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
           placeholder="Player"
         />
         <div className="flex flex-col space-y-4">
           <button
-            onClick={handleEnter}
+            onClick={handleCreate}
             disabled={!playerName.trim()}
             className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-500 rounded-lg text-xl font-bold transition-transform duration-150 transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Create Room
           </button>
           <button
-            onClick={handleEnter}
+            onClick={handleJoin}
             disabled={!playerName.trim()}
             className="w-full px-6 py-3 bg-green-600 hover:bg-green-500 rounded-lg text-xl font-bold transition-transform duration-150 transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
           >

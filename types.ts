@@ -23,3 +23,14 @@ export interface Player {
   rankTitle: string; // e.g., 'Daifugo', 'Hinmin'
   isCpu: boolean;
 }
+
+export interface WaitingPlayer {
+  name: string;
+  isCpu: boolean;
+}
+
+export interface Room {
+  id: string;
+  players: WaitingPlayer[];
+  gameCount: number;
+}
