@@ -1,0 +1,5 @@
+{
+  "name": "Online Daifugo Card Game",
+  "description": "A web-based implementation of the popular Japanese card game Daifugo (Grand Millionaire). This application features a clean UI for playing against simulated opponents, focusing on core game mechanics like card strength, passing, and winning conditions.",
+  "requestFramePermissions": []
+}
