@@ -1,4 +1,3 @@
-
 import { Card, Suit, Rank, Player } from '../types';
 import { CARD_RANK_POWER } from '../constants';
 
@@ -43,19 +42,16 @@ export const getCardPower = (card: Card): number => {
     return CARD_RANK_POWER[card.rank];
 };
 
-// Simplified validation for Milestone 1 & 2
 export const canPlay = (playedCards: Card[], fieldCards: Card[]): boolean => {
   if (playedCards.length === 0) {
     return false;
   }
   
-  // Joker can be played as a wildcard with other cards.
   const nonJokerCards = playedCards.filter(c => c.suit !== Suit.JOKER);
   if (nonJokerCards.length > 1) {
     const firstRank = nonJokerCards[0].rank;
     if (!nonJokerCards.every(c => c.rank === firstRank)) {
-      // For now, we only allow playing cards of the same rank (or with jokers)
-      return false;
+      return false; // Must be same rank (or with jokers)
     }
   }
 
@@ -67,8 +63,12 @@ export const canPlay = (playedCards: Card[], fieldCards: Card[]): boolean => {
     return false;
   }
 
-  const playedPower = getCardPower(nonJokerCards.length > 0 ? nonJokerCards[0] : playedCards[0]);
-  const fieldPower = getCardPower(fieldCards[0]); // Assume field cards are of the same rank power
+  const playedPowerCard = nonJokerCards.length > 0 ? nonJokerCards[0] : playedCards[0]; // If only jokers, use joker power
+  const playedPower = getCardPower(playedPowerCard);
+
+  const fieldNonJokerCards = fieldCards.filter(c => c.suit !== Suit.JOKER);
+  const fieldPowerCard = fieldNonJokerCards.length > 0 ? fieldNonJokerCards[0] : fieldCards[0]; // If only jokers, use joker power
+  const fieldPower = getCardPower(fieldPowerCard);
 
   return playedPower > fieldPower;
 };
@@ -79,4 +79,48 @@ export const isEightFlush = (playedCards: Card[]): boolean => {
   }
   // All cards must be 8s, Jokers are treated as 8s
   return playedCards.every(card => card.rank === 8 || card.suit === Suit.JOKER);
+};
+
+// Helper to generate card combinations from a player's hand
+const getCombinations = <T>(array: T[], size: number): T[][] => {
+    const result: T[][] = [];
+    function combinationUtil(startIndex: number, tempCombination: T[]) {
+        if (tempCombination.length === size) {
+            result.push([...tempCombination]);
+            return;
+        }
+        for (let i = startIndex; i < array.length; i++) {
+            tempCombination.push(array[i]);
+            combinationUtil(i + 1, tempCombination);
+            tempCombination.pop();
+        }
+    }
+    combinationUtil(0, []);
+    return result;
+}
+
+export const cpuSimpleThink = (hand: Card[], fieldCards: Card[]): Card[] | null => {
+  // If field is empty, play the weakest single card.
+  if (fieldCards.length === 0) {
+    const nonJokerHand = hand.filter(c => c.suit !== Suit.JOKER);
+    if (nonJokerHand.length > 0) {
+        return [nonJokerHand[0]];
+    }
+    // If only has joker(s), play one.
+    return hand.length > 0 ? [hand[0]] : null;
+  }
+
+  const numToPlay = fieldCards.length;
+  // Find all combinations of `numToPlay` cards from the CPU's hand.
+  const handCombinations = getCombinations(hand, numToPlay);
+  
+  // Find the first valid (and weakest) combination to play.
+  for (const combo of handCombinations) {
+    if (canPlay(combo, fieldCards)) {
+      return combo;
+    }
+  }
+
+  // If no valid combination is found, pass.
+  return null;
 };

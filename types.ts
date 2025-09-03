@@ -21,4 +21,5 @@ export interface Player {
   hand: Card[];
   isFinished: boolean;
   rankTitle: string; // e.g., 'Daifugo', 'Hinmin'
+  isCpu: boolean;
 }
